@@ -994,79 +994,80 @@ def wallCreaTor(model, wall_dict, ifc_walls_matched, point_cloud_walls_matched):
         # Last step: add connections to other walls into the new wall
                     # Iterate over matched IFC walls
         for ifc_wall in model.by_type("IfcWallStandardCase"):
-            if ifc_wall != newWall:
-                                     
-                # Extract the start and end points of the new IFC wall
-                new_wall_points = extrPoints(newWall)
-                new_wall_base = new_wall_points[0]
-                new_wall_end = new_wall_points[1]
-
-                # Extract the start and end points of the previously existing IFC wall
-                ifc_wall_points = extrPoints(ifc_wall)
-                ifc_wall_base = ifc_wall_points[0]
-                ifc_wall_end = ifc_wall_points[1]
-
-                # Calculate the smallest distances between the base and end points of the new wall and the base and end points of the previously existing IFC wall
-                distance_base = min(math.dist(new_wall_base, ifc_wall_base), math.dist(new_wall_base, ifc_wall_end))
-                distance_end = min(math.dist(new_wall_end, ifc_wall_base), math.dist(new_wall_end, ifc_wall_end))
-
-                # An existing wall may either be connected to the beginning of the new wall, to its end, connect to it 
-                # along its path (.ATPATH. connection), or unconnected. At path connections are not dealt with in this
-                # methodology however, because the comparison of walls is based on point cloud walls and ifc walls having 
-                # continuous planes on both sides
-
-                # If the smallest distance is less than 0.55m, create a new IfcRelConnectsPathElements relationship
-                # max(0.55, 3.0*ifc_w_dimy)
-                ifc_w_dimy = ifc_wall.Representation.Representations[1].Items[0].SweptArea.YDim
-                if distance_base < max(0.55, 3.0*ifc_w_dimy):
-                    # if starting points are connected
-                    if math.dist(new_wall_base, ifc_wall_base) < max(0.55, 3.0*ifc_w_dimy):
-                        rel_connects_path_elements = model.create_entity('IfcRelConnectsPathElements')
-                        rel_connects_path_elements.RelatingElement = ifc_wall
-                        rel_connects_path_elements.RelatedElement = newWall
-                        rel_connects_path_elements.RelatedConnectionType = 'ATSTART'
-                        rel_connects_path_elements.GlobalId = ifcopenshell.guid.compress(uuid.uuid1().hex)
-                        rel_connects_path_elements.Name = str(f'{newWall.GlobalId} + | + {ifc_wall.GlobalId}')
-                        rel_connects_path_elements.OwnerHistory = owner_history 
-                        rel_connects_path_elements.RelatingConnectionType = 'ATSTART'
-                        rel_connects_path_elements.Description = 'Structural'
-                    #if the starting point of the new wall is connected to the end of the other wall
-                    elif math.dist(new_wall_base, ifc_wall_end) < max(0.55, 3.0*ifc_w_dimy):
-                        rel_connects_path_elements = model.create_entity('IfcRelConnectsPathElements')
-                        rel_connects_path_elements.RelatingElement = ifc_wall
-                        rel_connects_path_elements.RelatedElement = newWall
-                        rel_connects_path_elements.RelatedConnectionType = 'ATSTART'
-                        rel_connects_path_elements.GlobalId = ifcopenshell.guid.compress(uuid.uuid1().hex)
-                        rel_connects_path_elements.Name = str(f'{newWall.GlobalId} + | + {ifc_wall.GlobalId}')
-                        rel_connects_path_elements.OwnerHistory = owner_history 
-                        rel_connects_path_elements.RelatingConnectionType = 'ATEND'
-                        rel_connects_path_elements.Description = 'Structural'
-                
-                if distance_end < max(0.55, 3.0*ifc_w_dimy):
-                    # if the end of the new wall is connected to the start of the other wall
-                    if math.dist(new_wall_end, ifc_wall_base) < max(0.55, 3.0*ifc_w_dimy):
-                        rel_connects_path_elements = model.create_entity('IfcRelConnectsPathElements')
-                        rel_connects_path_elements.RelatingElement = ifc_wall
-                        rel_connects_path_elements.RelatedElement = newWall
-                        rel_connects_path_elements.RelatedConnectionType = 'ATEND'
-                        rel_connects_path_elements.GlobalId = ifcopenshell.guid.compress(uuid.uuid1().hex)
-                        rel_connects_path_elements.Name = str(f'{newWall.GlobalId} + | + {ifc_wall.GlobalId}')
-                        rel_connects_path_elements.OwnerHistory = owner_history 
-                        rel_connects_path_elements.RelatingConnectionType = 'ATSTART'
-                        rel_connects_path_elements.Description = 'Structural'
-                    # if the end of the new wall is connected to the end of the other wall
-                    elif math.dist(new_wall_end, ifc_wall_end) < max(0.55, 3.0*ifc_w_dimy):
-                        rel_connects_path_elements = model.create_entity('IfcRelConnectsPathElements')
-                        rel_connects_path_elements.RelatingElement = ifc_wall
-                        rel_connects_path_elements.RelatedElement = newWall
-                        rel_connects_path_elements.RelatedConnectionType = 'ATEND'
-                        rel_connects_path_elements.GlobalId = ifcopenshell.guid.compress(uuid.uuid1().hex)
-                        rel_connects_path_elements.Name = str(f'{newWall.GlobalId} + | + {ifc_wall.GlobalId}')
-                        rel_connects_path_elements.OwnerHistory = owner_history 
-                        rel_connects_path_elements.RelatingConnectionType = 'ATEND'
-                        rel_connects_path_elements.Description = 'Structural'
+            if new_wall2.Representation.Representations[1].Items[0].SweptArea.is_a('IfcRectangleProfileDef'):
+                if ifc_wall != newWall:
+                                         
+                    # Extract the start and end points of the new IFC wall
+                    new_wall_points = extrPoints(newWall)
+                    new_wall_base = new_wall_points[0]
+                    new_wall_end = new_wall_points[1]
+    
+                    # Extract the start and end points of the previously existing IFC wall
+                    ifc_wall_points = extrPoints(ifc_wall)
+                    ifc_wall_base = ifc_wall_points[0]
+                    ifc_wall_end = ifc_wall_points[1]
+    
+                    # Calculate the smallest distances between the base and end points of the new wall and the base and end points of the previously existing IFC wall
+                    distance_base = min(math.dist(new_wall_base, ifc_wall_base), math.dist(new_wall_base, ifc_wall_end))
+                    distance_end = min(math.dist(new_wall_end, ifc_wall_base), math.dist(new_wall_end, ifc_wall_end))
+    
+                    # An existing wall may either be connected to the beginning of the new wall, to its end, connect to it 
+                    # along its path (.ATPATH. connection), or unconnected. At path connections are not dealt with in this
+                    # methodology however, because the comparison of walls is based on point cloud walls and ifc walls having 
+                    # continuous planes on both sides
+    
+                    # If the smallest distance is less than 0.55m, create a new IfcRelConnectsPathElements relationship
+                    # max(0.55, 3.0*ifc_w_dimy)
+                    ifc_w_dimy = ifc_wall.Representation.Representations[1].Items[0].SweptArea.YDim
+                    if distance_base < max(0.55, 3.0*ifc_w_dimy):
+                        # if starting points are connected
+                        if math.dist(new_wall_base, ifc_wall_base) < max(0.55, 3.0*ifc_w_dimy):
+                            rel_connects_path_elements = model.create_entity('IfcRelConnectsPathElements')
+                            rel_connects_path_elements.RelatingElement = ifc_wall
+                            rel_connects_path_elements.RelatedElement = newWall
+                            rel_connects_path_elements.RelatedConnectionType = 'ATSTART'
+                            rel_connects_path_elements.GlobalId = ifcopenshell.guid.compress(uuid.uuid1().hex)
+                            rel_connects_path_elements.Name = str(f'{newWall.GlobalId} + | + {ifc_wall.GlobalId}')
+                            rel_connects_path_elements.OwnerHistory = owner_history 
+                            rel_connects_path_elements.RelatingConnectionType = 'ATSTART'
+                            rel_connects_path_elements.Description = 'Structural'
+                        #if the starting point of the new wall is connected to the end of the other wall
+                        elif math.dist(new_wall_base, ifc_wall_end) < max(0.55, 3.0*ifc_w_dimy):
+                            rel_connects_path_elements = model.create_entity('IfcRelConnectsPathElements')
+                            rel_connects_path_elements.RelatingElement = ifc_wall
+                            rel_connects_path_elements.RelatedElement = newWall
+                            rel_connects_path_elements.RelatedConnectionType = 'ATSTART'
+                            rel_connects_path_elements.GlobalId = ifcopenshell.guid.compress(uuid.uuid1().hex)
+                            rel_connects_path_elements.Name = str(f'{newWall.GlobalId} + | + {ifc_wall.GlobalId}')
+                            rel_connects_path_elements.OwnerHistory = owner_history 
+                            rel_connects_path_elements.RelatingConnectionType = 'ATEND'
+                            rel_connects_path_elements.Description = 'Structural'
                     
-            
+                    if distance_end < max(0.55, 3.0*ifc_w_dimy):
+                        # if the end of the new wall is connected to the start of the other wall
+                        if math.dist(new_wall_end, ifc_wall_base) < max(0.55, 3.0*ifc_w_dimy):
+                            rel_connects_path_elements = model.create_entity('IfcRelConnectsPathElements')
+                            rel_connects_path_elements.RelatingElement = ifc_wall
+                            rel_connects_path_elements.RelatedElement = newWall
+                            rel_connects_path_elements.RelatedConnectionType = 'ATEND'
+                            rel_connects_path_elements.GlobalId = ifcopenshell.guid.compress(uuid.uuid1().hex)
+                            rel_connects_path_elements.Name = str(f'{newWall.GlobalId} + | + {ifc_wall.GlobalId}')
+                            rel_connects_path_elements.OwnerHistory = owner_history 
+                            rel_connects_path_elements.RelatingConnectionType = 'ATSTART'
+                            rel_connects_path_elements.Description = 'Structural'
+                        # if the end of the new wall is connected to the end of the other wall
+                        elif math.dist(new_wall_end, ifc_wall_end) < max(0.55, 3.0*ifc_w_dimy):
+                            rel_connects_path_elements = model.create_entity('IfcRelConnectsPathElements')
+                            rel_connects_path_elements.RelatingElement = ifc_wall
+                            rel_connects_path_elements.RelatedElement = newWall
+                            rel_connects_path_elements.RelatedConnectionType = 'ATEND'
+                            rel_connects_path_elements.GlobalId = ifcopenshell.guid.compress(uuid.uuid1().hex)
+                            rel_connects_path_elements.Name = str(f'{newWall.GlobalId} + | + {ifc_wall.GlobalId}')
+                            rel_connects_path_elements.OwnerHistory = owner_history 
+                            rel_connects_path_elements.RelatingConnectionType = 'ATEND'
+                            rel_connects_path_elements.Description = 'Structural'
+                        
+                
         else:
             print("No existing wall found.")
 
