@@ -178,7 +178,7 @@ def update_ifc_walls():
     display.FitAll()
 
 # Function to load point cloud file and generate alpha hull (the concave hull that envolves only the scanned area in Room Mode)
-def load_point_cloud_fileRM():
+def load_total_scanned_area():
     global alpha_hull
     # find the point cloud of the scanned area in any folder
     file_path, _ = QFileDialog.getOpenFileName(None, "Open Point Cloud File", "", "Point Cloud Files (*.xyz *.txt)")
@@ -377,7 +377,7 @@ if __name__ == "__main__":
     add_function_to_menu('Walls', check_walls_and_report)
     add_function_to_menu('Walls', update_ifc_walls)
     add_menu('Room Mode Walls')
-    add_function_to_menu('Room Mode Walls', load_point_cloud_fileRM)
+    add_function_to_menu('Room Mode Walls', load_total_scanned_area)
     add_function_to_menu('Room Mode Walls', load_segmented_walls)
     add_function_to_menu('Room Mode Walls', check_RM_walls_and_report)
     add_function_to_menu('Room Mode Walls', update_RM_ifc_walls)
