@@ -499,11 +499,11 @@ def wallCreaTor(model, wall_dict, ifc_walls_matched, point_cloud_walls_matched):
                         # Check if either the start of the new wall is close enough to determine a connection to the start of another wall, or to the end of another wall
                         # Here a dynamic threshold is used, so the highest value between 0.35 and 3 times the wall thickness. For most cases 0.35 should be fine, but if a wall
                         # is 0.7 m thick the point defined as start or end of the neaby connected wall might be much more far away
-                        if euclidean_distance(new_wall_start, existing_wall_start) <= max(0.35, 3*new_wall_dim_y) or euclidean_distance(new_wall_start, existing_wall_end) <= max(0.35, 3*new_wall_dim_y):
+                        if euclidean_distance(new_wall_start, existing_wall_start) <= max(0.55, 2.5*new_wall_dim_y) or euclidean_distance(new_wall_start, existing_wall_end) <= max(0.55, 2.5*new_wall_dim_y):
                             new_wall_has_hor_connection = True
 
                     elif new_wall_is_vertical and existing_wall_is_vertical:
-                        if euclidean_distance(new_wall_start, existing_wall_start) <= max(0.35, 3*new_wall_dim_y) or euclidean_distance(new_wall_start, existing_wall_end) <= max(0.35, 3*new_wall_dim_y):
+                        if euclidean_distance(new_wall_start, existing_wall_start) <= max(0.55, 2.5*new_wall_dim_y) or euclidean_distance(new_wall_start, existing_wall_end) <= max(0.55, 2.5*new_wall_dim_y):
                             new_wall_has_ver_connection = True
 
                    
@@ -524,7 +524,7 @@ def wallCreaTor(model, wall_dict, ifc_walls_matched, point_cloud_walls_matched):
                         if new_wall_has_hor_connection:
                             # Update start points (Cases 1-4)
                             # check if the walls are close enough to be considered as connected
-                            if existing_wall_is_horizontal and (euclidean_distance(new_wall_start, existing_wall_start) <= max(0.35, 3*new_wall_dim_y) or euclidean_distance(new_wall_start, existing_wall_end) <= max(0.35, 3*new_wall_dim_y)):
+                            if existing_wall_is_horizontal and (euclidean_distance(new_wall_start, existing_wall_start) <= max(0.55, 2.5*new_wall_dim_y) or euclidean_distance(new_wall_start, existing_wall_end) <= max(0.55, 2.5*new_wall_dim_y)):
                                 if euclidean_distance(new_wall_start, existing_wall_start) < euclidean_distance(new_wall_start, existing_wall_end):
                                     # if there is a gap between the two horizontal walls, or an overlap, the start of one is aligned to the end of the other
                                     # or start to start, if there is a horizontal wall with (-1.0, 0.0, 0.0) reference direction connected to the new wall
@@ -538,7 +538,7 @@ def wallCreaTor(model, wall_dict, ifc_walls_matched, point_cloud_walls_matched):
                         else:
                             #Case 2
                             if new_wall_is_horizontal and existing_wall_is_vertical:
-                                if euclidean_distance(new_wall_start, existing_wall_start) <= max(0.35, 3*new_wall_dim_y) or euclidean_distance(new_wall_start, existing_wall_end) <= max(0.35, 3*new_wall_dim_y):
+                                if euclidean_distance(new_wall_start, existing_wall_start) <= max(0.55, 2.5*new_wall_dim_y) or euclidean_distance(new_wall_start, existing_wall_end) <= max(0.55, 2.5*new_wall_dim_y):
                                     if euclidean_distance(new_wall_start, existing_wall_start) < euclidean_distance(new_wall_start, existing_wall_end):
                                         # the existing_wall start or end coordinate aligns to its longitudinal axis, so using half the thickness of the existing wall aligns the new wall
                                         # to one of the faces of the existing wall
@@ -549,7 +549,7 @@ def wallCreaTor(model, wall_dict, ifc_walls_matched, point_cloud_walls_matched):
                     elif new_wall_is_vertical:
                         if new_wall_has_ver_connection:
                             #Case 3 - here again, give preference to vertical walls connected to other vertical walls to keep the alignment
-                            if existing_wall_is_vertical and (euclidean_distance(new_wall_start, existing_wall_start) <= max(0.35, 3*new_wall_dim_y) or euclidean_distance(new_wall_start, existing_wall_end) <= max(0.35, 3*new_wall_dim_y)):
+                            if existing_wall_is_vertical and (euclidean_distance(new_wall_start, existing_wall_start) <= max(0.55, 2.5*new_wall_dim_y) or euclidean_distance(new_wall_start, existing_wall_end) <= max(0.55, 2.5*new_wall_dim_y)):
                                 # whichever end (end or start) of the nearby wall is the closest to the start of the new wall, use it to correct the position and align
                                 if euclidean_distance(new_wall_start, existing_wall_start) < euclidean_distance(new_wall_start, existing_wall_end):
                                     new_wall_start = existing_wall_start
@@ -560,7 +560,7 @@ def wallCreaTor(model, wall_dict, ifc_walls_matched, point_cloud_walls_matched):
                         else:
                             #Case 4
                             if new_wall_is_vertical and existing_wall_is_horizontal:
-                                if euclidean_distance(new_wall_start, existing_wall_start) <= max(0.35, 3*new_wall_dim_y) or euclidean_distance(new_wall_start, existing_wall_end) <= max(0.35, 3*new_wall_dim_y):
+                                if euclidean_distance(new_wall_start, existing_wall_start) <= max(0.55, 2.5*new_wall_dim_y) or euclidean_distance(new_wall_start, existing_wall_end) <= max(0.55, 2.5*new_wall_dim_y):
                                     # if the starting points of both walls are the closest to each other and they are connected
                                     if euclidean_distance(new_wall_start, existing_wall_start) < euclidean_distance(new_wall_start, existing_wall_end):
                                         if existing_wall.ObjectPlacement.RelativePlacement.RefDirection is None:
@@ -611,21 +611,21 @@ def wallCreaTor(model, wall_dict, ifc_walls_matched, point_cloud_walls_matched):
                     if new_wall_is_horizontal and existing_wall_is_horizontal:
                         # The minimum value at the dynamic threshold is higher at the wall end because the start point was just moved, possibly
                         # making distances to another wall even greater without, until here, a change in the wall length
-                        if euclidean_distance(new_wall_end, existing_wall_start) <= max(0.75, 3*new_wall_dim_y) or euclidean_distance(new_wall_end, existing_wall_end) <= max(0.75, 3*new_wall_dim_y):
+                        if euclidean_distance(new_wall_end, existing_wall_start) <= max(0.75, 2.8*new_wall_dim_y) or euclidean_distance(new_wall_end, existing_wall_end) <= max(0.75, 2.8*new_wall_dim_y):
                             if euclidean_distance(new_wall_end, existing_wall_start) < euclidean_distance(new_wall_end, existing_wall_end):
                                 new_wall_length = existing_wall_start[0] - new_wall_start[0]
                             else:
                                 new_wall_length = existing_wall_end[0] - new_wall_start[0]
                     # case 6
                     elif new_wall_is_horizontal and existing_wall_is_vertical:
-                        if euclidean_distance(new_wall_end, existing_wall_start) <= max(0.75, 3*new_wall_dim_y) or euclidean_distance(new_wall_end, existing_wall_end) <= max(0.75, 3*new_wall_dim_y):
+                        if euclidean_distance(new_wall_end, existing_wall_start) <= max(0.75, 2.8*new_wall_dim_y) or euclidean_distance(new_wall_end, existing_wall_end) <= max(0.75, 2.8*new_wall_dim_y):
                             if euclidean_distance(new_wall_end, existing_wall_start) < euclidean_distance(new_wall_end, existing_wall_end):
                                 new_wall_length = existing_wall_start[0] - new_wall_start[0] + 0.5 * existing_wall_dim_y
                             else:
                                 new_wall_length = existing_wall_end[0] - new_wall_start[0] + 0.5 * existing_wall_dim_y
                     # case 7
                     elif new_wall_is_vertical and existing_wall_is_vertical:
-                        if euclidean_distance(new_wall_end, existing_wall_start) <= max(0.75, 3*new_wall_dim_y) or euclidean_distance(new_wall_end, existing_wall_end) <= max(0.75, 3*new_wall_dim_y):
+                        if euclidean_distance(new_wall_end, existing_wall_start) <= max(0.75, 2.8*new_wall_dim_y) or euclidean_distance(new_wall_end, existing_wall_end) <= max(0.75, 2.8*new_wall_dim_y):
                             if euclidean_distance(new_wall_end, existing_wall_start) < euclidean_distance(new_wall_end, existing_wall_end):
                                 # If the end of the new wall is conencted to the start of another vertical wall just above it, the ideal length of the wall
                                 # should be the distance between this start of the existing wall bordering it, and the start of the new wall
@@ -637,7 +637,7 @@ def wallCreaTor(model, wall_dict, ifc_walls_matched, point_cloud_walls_matched):
                                 new_wall_length = existing_wall_end[1] - new_wall_start[1] 
                     # case 8
                     elif new_wall_is_vertical and existing_wall_is_horizontal:
-                        if euclidean_distance(new_wall_end, existing_wall_start) <= max(0.75, 3*new_wall_dim_y) or euclidean_distance(new_wall_end, existing_wall_end) <= max(0.75, 3*new_wall_dim_y):
+                        if euclidean_distance(new_wall_end, existing_wall_start) <= max(0.75, 2.8*new_wall_dim_y) or euclidean_distance(new_wall_end, existing_wall_end) <= max(0.75, 2.8*new_wall_dim_y):
                             new_wall_length = float(existing_wall_start[1] - new_wall_start[1]) + 0.5 * existing_wall_dim_y
 
             # Update the new wall's length and size of the profile that defines the wall
@@ -690,11 +690,11 @@ def wallCreaTor(model, wall_dict, ifc_walls_matched, point_cloud_walls_matched):
                         
                     # checking for horizontal-horizontal and vertical-vertical connections
                     if new_wall_is_horizontal and new_wall2_is_horizontal:
-                        if euclidean_distance(new_wall_start, new_wall2_start) <= max(0.35, 3.5*new_wall_dim_y) or euclidean_distance(new_wall_start, new_wall2_end) <= max(0.35, 3.5*new_wall_dim_y):
+                        if euclidean_distance(new_wall_start, new_wall2_start) <= max(0.55, 2.5*new_wall_dim_y) or euclidean_distance(new_wall_start, new_wall2_end) <= max(0.55, 2.5*new_wall_dim_y):
                             new_wall_has_hor_connection = True
 
                     elif new_wall_is_vertical and new_wall2_is_vertical:
-                        if euclidean_distance(new_wall_start, new_wall2_start) <= max(0.35, 3.5*new_wall_dim_y) or euclidean_distance(new_wall_start, new_wall2_end) <= max(0.35, 3.5*new_wall_dim_y):
+                        if euclidean_distance(new_wall_start, new_wall2_start) <= max(0.55, 2.5*new_wall_dim_y) or euclidean_distance(new_wall_start, new_wall2_end) <= max(0.55, 2.5*new_wall_dim_y):
                             new_wall_has_ver_connection = True
 
                    
@@ -713,7 +713,7 @@ def wallCreaTor(model, wall_dict, ifc_walls_matched, point_cloud_walls_matched):
                     if new_wall_is_horizontal:
                         if new_wall_has_hor_connection:
                             # Update start points (Cases 1-4)
-                            if new_wall2_is_horizontal and (euclidean_distance(new_wall_start, new_wall2_start) <= max(0.35, 3.5*new_wall_dim_y) or euclidean_distance(new_wall_start, new_wall2_end) <= max(0.35, 3.5*new_wall_dim_y)):
+                            if new_wall2_is_horizontal and (euclidean_distance(new_wall_start, new_wall2_start) <= max(0.55, 2.5*new_wall_dim_y) or euclidean_distance(new_wall_start, new_wall2_end) <= max(0.55, 2.5*new_wall_dim_y)):
                                 if euclidean_distance(new_wall_start, new_wall2_start) < euclidean_distance(new_wall_start, new_wall2_end):
                                     new_wall_start = new_wall2_start
                                 else:
@@ -723,7 +723,7 @@ def wallCreaTor(model, wall_dict, ifc_walls_matched, point_cloud_walls_matched):
                         else:
                             #Case 2
                             if new_wall_is_horizontal and new_wall2_is_vertical:
-                                if euclidean_distance(new_wall_start, new_wall2_start) <= max(0.35, 3.5*new_wall_dim_y) or euclidean_distance(new_wall_start, new_wall2_end) <= max(0.35, 3.5*new_wall_dim_y):
+                                if euclidean_distance(new_wall_start, new_wall2_start) <= max(0.55, 2.5*new_wall_dim_y) or euclidean_distance(new_wall_start, new_wall2_end) <= max(0.25, 2.5*new_wall_dim_y):
                                     if euclidean_distance(new_wall_start, new_wall2_start) < euclidean_distance(new_wall_start, new_wall2_end):
                                         new_wall_start = (new_wall2_start[0] - 0.5 * new_wall2_dim_y, new_wall2_start[1], new_wall_start[2])
                                     else:
@@ -732,7 +732,7 @@ def wallCreaTor(model, wall_dict, ifc_walls_matched, point_cloud_walls_matched):
                     elif new_wall_is_vertical:
                         if new_wall_has_ver_connection:
                             #Case 3
-                            if new_wall2_is_vertical and (euclidean_distance(new_wall_start, new_wall2_start) <= max(0.35, 3.5*new_wall_dim_y) or euclidean_distance(new_wall_start, new_wall2_end) <= max(0.35, 3.5*new_wall_dim_y)):
+                            if new_wall2_is_vertical and (euclidean_distance(new_wall_start, new_wall2_start) <= max(0.55, 2.5*new_wall_dim_y) or euclidean_distance(new_wall_start, new_wall2_end) <= max(0.55, 2.5*new_wall_dim_y)):
                                 if euclidean_distance(new_wall_start, new_wall2_start) < euclidean_distance(new_wall_start, new_wall2_end):
                                     new_wall_start = new_wall2_start
                                 else:
@@ -742,7 +742,7 @@ def wallCreaTor(model, wall_dict, ifc_walls_matched, point_cloud_walls_matched):
                         else:
                             #Case 4
                             if new_wall_is_vertical and new_wall2_is_horizontal:
-                                if euclidean_distance(new_wall_start, new_wall2_start) <= max(0.35, 3.5*new_wall_dim_y) or euclidean_distance(new_wall_start, new_wall2_end) <= max(0.35, 3.5*new_wall_dim_y):
+                                if euclidean_distance(new_wall_start, new_wall2_start) <= max(0.55, 2.5*new_wall_dim_y) or euclidean_distance(new_wall_start, new_wall2_end) <= max(0.55, 2.5*new_wall_dim_y):
                                     if euclidean_distance(new_wall_start, new_wall2_start) < euclidean_distance(new_wall_start, new_wall2_end):
                                         if new_wall2.ObjectPlacement.RelativePlacement.RefDirection is None:
                                             
@@ -788,28 +788,28 @@ def wallCreaTor(model, wall_dict, ifc_walls_matched, point_cloud_walls_matched):
                             new_wall2_is_vertical = new_wall2.ObjectPlacement.RelativePlacement.RefDirection.DirectionRatios in [(0., 1., 0.), (0., -1., 0.)]
 
                         if new_wall_is_horizontal and new_wall2_is_horizontal:
-                            if euclidean_distance(new_wall_end, new_wall2_start) <= max(0.75, 3*new_wall_dim_y) or euclidean_distance(new_wall_end, new_wall2_end) <= max(0.75, 3*new_wall_dim_y):
+                            if euclidean_distance(new_wall_end, new_wall2_start) <= max(0.75, 2.8*new_wall_dim_y) or euclidean_distance(new_wall_end, new_wall2_end) <= max(0.75, 2.8*new_wall_dim_y):
                                 if euclidean_distance(new_wall_end, new_wall2_start) < euclidean_distance(new_wall_end, new_wall2_end):
                                     new_wall_length = new_wall2_start[0] - new_wall_start[0]
                                 else:
                                     new_wall_length = new_wall2_end[0] - new_wall_start[0]
 
                         elif new_wall_is_horizontal and new_wall2_is_vertical:
-                            if euclidean_distance(new_wall_end, new_wall2_start) <= max(0.75, 3*new_wall_dim_y) or euclidean_distance(new_wall_end, new_wall2_end) <= max(0.75, 3*new_wall_dim_y):
+                            if euclidean_distance(new_wall_end, new_wall2_start) <= max(0.75, 2.8*new_wall_dim_y) or euclidean_distance(new_wall_end, new_wall2_end) <= max(0.75, 2.8*new_wall_dim_y):
                                 if euclidean_distance(new_wall_end, new_wall2_start) < euclidean_distance(new_wall_end, new_wall2_end):
                                     new_wall_length = new_wall2_start[0] - new_wall_start[0] + 0.5 * new_wall2_dim_y
                                 else:
                                     new_wall_length = new_wall2_end[0] - new_wall_start[0] + 0.5 * new_wall2_dim_y
 
                         elif new_wall_is_vertical and new_wall2_is_vertical:
-                            if euclidean_distance(new_wall_end, new_wall2_start) <= max(0.75, 3*new_wall_dim_y) or euclidean_distance(new_wall_end, new_wall2_end) <= max(0.75, 3*new_wall_dim_y):
+                            if euclidean_distance(new_wall_end, new_wall2_start) <= max(0.75, 2.8*new_wall_dim_y) or euclidean_distance(new_wall_end, new_wall2_end) <= max(0.75, 2.8*new_wall_dim_y):
                                 if euclidean_distance(new_wall_end, new_wall2_start) < euclidean_distance(new_wall_end, new_wall2_end):
                                     new_wall_length = new_wall2_start[1] - new_wall_start[1] 
                                 else:
                                     new_wall_length = new_wall2_end[1] - new_wall_start[1] 
 
                         elif new_wall_is_vertical and new_wall2_is_horizontal:
-                            if euclidean_distance(new_wall_end, new_wall2_start) <= max(0.75, 3*new_wall_dim_y) or euclidean_distance(new_wall_end, new_wall2_end) <= max(0.75, 3*new_wall_dim_y):
+                            if euclidean_distance(new_wall_end, new_wall2_start) <= max(0.75, 2.8*new_wall_dim_y) or euclidean_distance(new_wall_end, new_wall2_end) <= max(0.75, 2.8*new_wall_dim_y):
                                 new_wall_length = float(new_wall2_start[1] - new_wall_start[1]) + 0.5 *new_wall2_dim_y
 
                 # Update the new wall's length and position
@@ -856,11 +856,11 @@ def wallCreaTor(model, wall_dict, ifc_walls_matched, point_cloud_walls_matched):
                         
                     # Update start points (Cases 1-4)
                     if new_wall_is_horizontal and new_wall2_is_horizontal:
-                        if euclidean_distance(new_wall_start, new_wall2_start) <= max(0.35, 3.5*new_wall_dim_y) or euclidean_distance(new_wall_start, new_wall2_end) <= max(0.35, 3.5*new_wall_dim_y):
+                        if euclidean_distance(new_wall_start, new_wall2_start) <= max(0.55, 2.5*new_wall_dim_y) or euclidean_distance(new_wall_start, new_wall2_end) <= max(0.55, 2.5*new_wall_dim_y):
                             new_wall_has_hor_connection = True
 
                     elif new_wall_is_vertical and new_wall2_is_vertical:
-                        if euclidean_distance(new_wall_start, new_wall2_start) <= max(0.35, 3.5*new_wall_dim_y) or euclidean_distance(new_wall_start, new_wall2_end) <= max(0.35, 3.5*new_wall_dim_y):
+                        if euclidean_distance(new_wall_start, new_wall2_start) <= max(0.55, 2.5*new_wall_dim_y) or euclidean_distance(new_wall_start, new_wall2_end) <= max(0.55, 2.5*new_wall_dim_y):
                             new_wall_has_ver_connection = True
 
                    
@@ -879,7 +879,7 @@ def wallCreaTor(model, wall_dict, ifc_walls_matched, point_cloud_walls_matched):
                     if new_wall_is_horizontal:
                         if new_wall_has_hor_connection:
                             # Update start points (Cases 1-4)
-                            if new_wall2_is_horizontal and (euclidean_distance(new_wall_start, new_wall2_start) <= max(0.35, 3.5*new_wall_dim_y) or euclidean_distance(new_wall_start, new_wall2_end) <= max(0.35, 3.5*new_wall_dim_y)):
+                            if new_wall2_is_horizontal and (euclidean_distance(new_wall_start, new_wall2_start) <= max(0.55, 2.5*new_wall_dim_y) or euclidean_distance(new_wall_start, new_wall2_end) <= max(0.55, 2.5*new_wall_dim_y)):
                                 if euclidean_distance(new_wall_start, new_wall2_start) < euclidean_distance(new_wall_start, new_wall2_end):
                                     new_wall_start = new_wall2_start
                                 else:
@@ -889,7 +889,7 @@ def wallCreaTor(model, wall_dict, ifc_walls_matched, point_cloud_walls_matched):
                         else:
                             #Case 2
                             if new_wall_is_horizontal and new_wall2_is_vertical:
-                                if euclidean_distance(new_wall_start, new_wall2_start) <= max(0.35, 3.5*new_wall_dim_y) or euclidean_distance(new_wall_start, new_wall2_end) <= max(0.35, 3.5*new_wall_dim_y):
+                                if euclidean_distance(new_wall_start, new_wall2_start) <= max(0.55, 2.5*new_wall_dim_y) or euclidean_distance(new_wall_start, new_wall2_end) <= max(0.55, 2.5*new_wall_dim_y):
                                     if euclidean_distance(new_wall_start, new_wall2_start) < euclidean_distance(new_wall_start, new_wall2_end):
                                         new_wall_start = (new_wall2_start[0] - 0.5 * new_wall2_dim_y, new_wall2_start[1], new_wall_start[2])
                                     else:
@@ -898,7 +898,7 @@ def wallCreaTor(model, wall_dict, ifc_walls_matched, point_cloud_walls_matched):
                     elif new_wall_is_vertical:
                         if new_wall_has_ver_connection:
                             #Case 3
-                            if new_wall2_is_vertical and (euclidean_distance(new_wall_start, new_wall2_start) <= max(0.35, 3.5*new_wall_dim_y) or euclidean_distance(new_wall_start, new_wall2_end) <= max(0.35, 3.5*new_wall_dim_y)):
+                            if new_wall2_is_vertical and (euclidean_distance(new_wall_start, new_wall2_start) <= max(0.55, 2.5*new_wall_dim_y) or euclidean_distance(new_wall_start, new_wall2_end) <= max(0.55, 2.5*new_wall_dim_y)):
                                 if euclidean_distance(new_wall_start, new_wall2_start) < euclidean_distance(new_wall_start, new_wall2_end):
                                     new_wall_start = new_wall2_start
                                 else:
@@ -908,7 +908,7 @@ def wallCreaTor(model, wall_dict, ifc_walls_matched, point_cloud_walls_matched):
                         else:
                             #Case 4
                             if new_wall_is_vertical and new_wall2_is_horizontal:
-                                if euclidean_distance(new_wall_start, new_wall2_start) <= max(0.35, 3.5*new_wall_dim_y) or euclidean_distance(new_wall_start, new_wall2_end) <= max(0.35, 3.5*new_wall_dim_y):
+                                if euclidean_distance(new_wall_start, new_wall2_start) <= max(0.55, 2.5*new_wall_dim_y) or euclidean_distance(new_wall_start, new_wall2_end) <= max(0.55, 2.5*new_wall_dim_y):
                                     if euclidean_distance(new_wall_start, new_wall2_start) < euclidean_distance(new_wall_start, new_wall2_end):
                                         if new_wall2.ObjectPlacement.RelativePlacement.RefDirection is None:
                                             
@@ -954,28 +954,28 @@ def wallCreaTor(model, wall_dict, ifc_walls_matched, point_cloud_walls_matched):
                             new_wall2_is_vertical = new_wall2.ObjectPlacement.RelativePlacement.RefDirection.DirectionRatios in [(0., 1., 0.), (0., -1., 0.)]
 
                         if new_wall_is_horizontal and new_wall2_is_horizontal:
-                            if euclidean_distance(new_wall_end, new_wall2_start) <= max(0.75, 3*new_wall_dim_y) or euclidean_distance(new_wall_end, new_wall2_end) <= max(0.75, 3*new_wall_dim_y):
+                            if euclidean_distance(new_wall_end, new_wall2_start) <= max(0.75, 2.8*new_wall_dim_y) or euclidean_distance(new_wall_end, new_wall2_end) <= max(0.75, 2.8*new_wall_dim_y):
                                 if euclidean_distance(new_wall_end, new_wall2_start) < euclidean_distance(new_wall_end, new_wall2_end):
                                     new_wall_length = new_wall2_start[0] - new_wall_start[0]
                                 else:
                                     new_wall_length = new_wall2_end[0] - new_wall_start[0]
 
                         elif new_wall_is_horizontal and new_wall2_is_vertical:
-                            if euclidean_distance(new_wall_end, new_wall2_start) <= max(0.75, 3*new_wall_dim_y) or euclidean_distance(new_wall_end, new_wall2_end) <= max(0.75, 3*new_wall_dim_y):
+                            if euclidean_distance(new_wall_end, new_wall2_start) <= max(0.75, 2.8*new_wall_dim_y) or euclidean_distance(new_wall_end, new_wall2_end) <= max(0.75, 2.8*new_wall_dim_y):
                                 if euclidean_distance(new_wall_end, new_wall2_start) < euclidean_distance(new_wall_end, new_wall2_end):
                                     new_wall_length = new_wall2_start[0] - new_wall_start[0] + 0.5 * new_wall2_dim_y
                                 else:
                                     new_wall_length = new_wall2_end[0] - new_wall_start[0] + 0.5 * new_wall2_dim_y
 
                         elif new_wall_is_vertical and new_wall2_is_vertical:
-                            if euclidean_distance(new_wall_end, new_wall2_start) <= max(0.75, 3*new_wall_dim_y) or euclidean_distance(new_wall_end, new_wall2_end) <= max(0.75, 3*new_wall_dim_y):
+                            if euclidean_distance(new_wall_end, new_wall2_start) <= max(0.75, 2.8*new_wall_dim_y) or euclidean_distance(new_wall_end, new_wall2_end) <= max(0.75, 2.8*new_wall_dim_y):
                                 if euclidean_distance(new_wall_end, new_wall2_start) < euclidean_distance(new_wall_end, new_wall2_end):
                                     new_wall_length = new_wall2_start[1] - new_wall_start[1] 
                                 else:
                                     new_wall_length = new_wall2_end[1] - new_wall_start[1] 
 
                         elif new_wall_is_vertical and new_wall2_is_horizontal:
-                            if euclidean_distance(new_wall_end, new_wall2_start) <= max(0.75, 3*new_wall_dim_y) or euclidean_distance(new_wall_end, new_wall2_end) <= max(0.75, 3*new_wall_dim_y):
+                            if euclidean_distance(new_wall_end, new_wall2_start) <= max(0.75, 2.8*new_wall_dim_y) or euclidean_distance(new_wall_end, new_wall2_end) <= max(0.75, 2.8*new_wall_dim_y):
                                 new_wall_length = float(new_wall2_start[1] - new_wall_start[1]) + 0.5 *new_wall2_dim_y
 
                 # Update the new wall's length and position
@@ -989,85 +989,99 @@ def wallCreaTor(model, wall_dict, ifc_walls_matched, point_cloud_walls_matched):
 
 
     #named as newWall to avoid a possible confusion with new_wall worked on above
+    newWalls_matched_to_eachother = []
     for newWall in new_walls:
         
         # Last step: add connections to other walls into the new wall
                     # Iterate over matched IFC walls
         for ifc_wall in model.by_type("IfcWallStandardCase"):
-            if new_wall2.Representation.Representations[1].Items[0].SweptArea.is_a('IfcRectangleProfileDef'):
+            if ifc_wall.Representation.Representations[1].Items[0].SweptArea.is_a('IfcRectangleProfileDef'):
+
                 if ifc_wall != newWall:
-                                         
+                                        
                     # Extract the start and end points of the new IFC wall
                     new_wall_points = extrPoints(newWall)
                     new_wall_base = new_wall_points[0]
                     new_wall_end = new_wall_points[1]
-    
+
                     # Extract the start and end points of the previously existing IFC wall
                     ifc_wall_points = extrPoints(ifc_wall)
                     ifc_wall_base = ifc_wall_points[0]
                     ifc_wall_end = ifc_wall_points[1]
-    
+
                     # Calculate the smallest distances between the base and end points of the new wall and the base and end points of the previously existing IFC wall
                     distance_base = min(math.dist(new_wall_base, ifc_wall_base), math.dist(new_wall_base, ifc_wall_end))
                     distance_end = min(math.dist(new_wall_end, ifc_wall_base), math.dist(new_wall_end, ifc_wall_end))
-    
+
                     # An existing wall may either be connected to the beginning of the new wall, to its end, connect to it 
                     # along its path (.ATPATH. connection), or unconnected. At path connections are not dealt with in this
                     # methodology however, because the comparison of walls is based on point cloud walls and ifc walls having 
                     # continuous planes on both sides
-    
+
                     # If the smallest distance is less than 0.55m, create a new IfcRelConnectsPathElements relationship
                     # max(0.55, 3.0*ifc_w_dimy)
                     ifc_w_dimy = ifc_wall.Representation.Representations[1].Items[0].SweptArea.YDim
-                    if distance_base < max(0.55, 3.0*ifc_w_dimy):
-                        # if starting points are connected
-                        if math.dist(new_wall_base, ifc_wall_base) < max(0.55, 3.0*ifc_w_dimy):
-                            rel_connects_path_elements = model.create_entity('IfcRelConnectsPathElements')
-                            rel_connects_path_elements.RelatingElement = ifc_wall
-                            rel_connects_path_elements.RelatedElement = newWall
-                            rel_connects_path_elements.RelatedConnectionType = 'ATSTART'
-                            rel_connects_path_elements.GlobalId = ifcopenshell.guid.compress(uuid.uuid1().hex)
-                            rel_connects_path_elements.Name = str(f'{newWall.GlobalId} + | + {ifc_wall.GlobalId}')
-                            rel_connects_path_elements.OwnerHistory = owner_history 
-                            rel_connects_path_elements.RelatingConnectionType = 'ATSTART'
-                            rel_connects_path_elements.Description = 'Structural'
-                        #if the starting point of the new wall is connected to the end of the other wall
-                        elif math.dist(new_wall_base, ifc_wall_end) < max(0.55, 3.0*ifc_w_dimy):
-                            rel_connects_path_elements = model.create_entity('IfcRelConnectsPathElements')
-                            rel_connects_path_elements.RelatingElement = ifc_wall
-                            rel_connects_path_elements.RelatedElement = newWall
-                            rel_connects_path_elements.RelatedConnectionType = 'ATSTART'
-                            rel_connects_path_elements.GlobalId = ifcopenshell.guid.compress(uuid.uuid1().hex)
-                            rel_connects_path_elements.Name = str(f'{newWall.GlobalId} + | + {ifc_wall.GlobalId}')
-                            rel_connects_path_elements.OwnerHistory = owner_history 
-                            rel_connects_path_elements.RelatingConnectionType = 'ATEND'
-                            rel_connects_path_elements.Description = 'Structural'
+                    walls_already_connected = False
+                    if distance_base < max(0.55, 2.2*ifc_w_dimy):
+                        for i in newWalls_matched_to_eachother:
+                            if newWall in i and ifc_wall in i:
+                                walls_already_connected = True
+                        if walls_already_connected is False:
+                            newWalls_matched_to_eachother.append([newWall, ifc_wall])
+                            # if starting points are connected
+                            if math.dist(new_wall_base, ifc_wall_base) < max(0.55, 2.2*ifc_w_dimy):
+                                rel_connects_path_elements = model.create_entity('IfcRelConnectsPathElements')
+                                rel_connects_path_elements.RelatingElement = ifc_wall
+                                rel_connects_path_elements.RelatedElement = newWall
+                                rel_connects_path_elements.RelatedConnectionType = 'ATSTART'
+                                rel_connects_path_elements.GlobalId = ifcopenshell.guid.compress(uuid.uuid1().hex)
+                                rel_connects_path_elements.Name = str(f'{newWall.GlobalId} + | + {ifc_wall.GlobalId}')
+                                rel_connects_path_elements.OwnerHistory = owner_history 
+                                rel_connects_path_elements.RelatingConnectionType = 'ATSTART'
+                                rel_connects_path_elements.Description = 'Structural'
+                            #if the starting point of the new wall is connected to the end of the other wall
+                            elif math.dist(new_wall_base, ifc_wall_end) < max(0.55, 3.0*ifc_w_dimy):
+                                rel_connects_path_elements = model.create_entity('IfcRelConnectsPathElements')
+                                rel_connects_path_elements.RelatingElement = ifc_wall
+                                rel_connects_path_elements.RelatedElement = newWall
+                                rel_connects_path_elements.RelatedConnectionType = 'ATSTART'
+                                rel_connects_path_elements.GlobalId = ifcopenshell.guid.compress(uuid.uuid1().hex)
+                                rel_connects_path_elements.Name = str(f'{newWall.GlobalId} + | + {ifc_wall.GlobalId}')
+                                rel_connects_path_elements.OwnerHistory = owner_history 
+                                rel_connects_path_elements.RelatingConnectionType = 'ATEND'
+                                rel_connects_path_elements.Description = 'Structural'
+                            
                     
-                    if distance_end < max(0.55, 3.0*ifc_w_dimy):
-                        # if the end of the new wall is connected to the start of the other wall
-                        if math.dist(new_wall_end, ifc_wall_base) < max(0.55, 3.0*ifc_w_dimy):
-                            rel_connects_path_elements = model.create_entity('IfcRelConnectsPathElements')
-                            rel_connects_path_elements.RelatingElement = ifc_wall
-                            rel_connects_path_elements.RelatedElement = newWall
-                            rel_connects_path_elements.RelatedConnectionType = 'ATEND'
-                            rel_connects_path_elements.GlobalId = ifcopenshell.guid.compress(uuid.uuid1().hex)
-                            rel_connects_path_elements.Name = str(f'{newWall.GlobalId} + | + {ifc_wall.GlobalId}')
-                            rel_connects_path_elements.OwnerHistory = owner_history 
-                            rel_connects_path_elements.RelatingConnectionType = 'ATSTART'
-                            rel_connects_path_elements.Description = 'Structural'
-                        # if the end of the new wall is connected to the end of the other wall
-                        elif math.dist(new_wall_end, ifc_wall_end) < max(0.55, 3.0*ifc_w_dimy):
-                            rel_connects_path_elements = model.create_entity('IfcRelConnectsPathElements')
-                            rel_connects_path_elements.RelatingElement = ifc_wall
-                            rel_connects_path_elements.RelatedElement = newWall
-                            rel_connects_path_elements.RelatedConnectionType = 'ATEND'
-                            rel_connects_path_elements.GlobalId = ifcopenshell.guid.compress(uuid.uuid1().hex)
-                            rel_connects_path_elements.Name = str(f'{newWall.GlobalId} + | + {ifc_wall.GlobalId}')
-                            rel_connects_path_elements.OwnerHistory = owner_history 
-                            rel_connects_path_elements.RelatingConnectionType = 'ATEND'
-                            rel_connects_path_elements.Description = 'Structural'
-                        
-                
+                    if distance_end < max(0.55, 2.2*ifc_w_dimy):
+                        for i in newWalls_matched_to_eachother:
+                            if newWall in i and ifc_wall in i:
+                                walls_already_connected = True
+                        if walls_already_connected is False:
+                            newWalls_matched_to_eachother.append([newWall, ifc_wall])
+                            # if the end of the new wall is connected to the start of the other wall
+                            if math.dist(new_wall_end, ifc_wall_base) < max(0.55, 2.2*ifc_w_dimy):
+                                rel_connects_path_elements = model.create_entity('IfcRelConnectsPathElements')
+                                rel_connects_path_elements.RelatingElement = ifc_wall
+                                rel_connects_path_elements.RelatedElement = newWall
+                                rel_connects_path_elements.RelatedConnectionType = 'ATEND'
+                                rel_connects_path_elements.GlobalId = ifcopenshell.guid.compress(uuid.uuid1().hex)
+                                rel_connects_path_elements.Name = str(f'{newWall.GlobalId} + | + {ifc_wall.GlobalId}')
+                                rel_connects_path_elements.OwnerHistory = owner_history 
+                                rel_connects_path_elements.RelatingConnectionType = 'ATSTART'
+                                rel_connects_path_elements.Description = 'Structural'
+                            # if the end of the new wall is connected to the end of the other wall
+                            elif math.dist(new_wall_end, ifc_wall_end) < max(0.55, 2.2*ifc_w_dimy):
+                                rel_connects_path_elements = model.create_entity('IfcRelConnectsPathElements')
+                                rel_connects_path_elements.RelatingElement = ifc_wall
+                                rel_connects_path_elements.RelatedElement = newWall
+                                rel_connects_path_elements.RelatedConnectionType = 'ATEND'
+                                rel_connects_path_elements.GlobalId = ifcopenshell.guid.compress(uuid.uuid1().hex)
+                                rel_connects_path_elements.Name = str(f'{newWall.GlobalId} + | + {ifc_wall.GlobalId}')
+                                rel_connects_path_elements.OwnerHistory = owner_history 
+                                rel_connects_path_elements.RelatingConnectionType = 'ATEND'
+                                rel_connects_path_elements.Description = 'Structural'
+                    
+            
         else:
             print("No existing wall found.")
 
