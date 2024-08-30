@@ -1,6 +1,6 @@
 The datasets used to test the application can be downloaded here:
 
-https://www.dropbox.com/scl/fi/d40wepipc4xhve2vsg7ei/Data.zip?rlkey=k0bxznpjpxbh8fgafkcfcrh9h&st=s05igw4h&dl=0
+https://www.dropbox.com/scl/fi/jl6zozq6v67el39qk9jb1/Data.zip?rlkey=50sgv03ncaukp9jwazu26xqs1&st=5ct75wim&dl=0
 
 They were uploaded in a different platform as GitHub has poor support for files larger than 100mb and some of the point clouds have 300mb. 
 The total compressed size is under 700mb and the unzipped size of the datasets is around 1.8gb.
