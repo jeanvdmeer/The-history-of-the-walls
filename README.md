@@ -8,4 +8,4 @@ The functionalities can be accessed through the user interface ( userInterface.p
 [![Youtube link](https://img.youtube.com/vi/XWULh_mqHhw/0.jpg)](https://www.youtube.com/watch?v=XWULh_mqHhw "Explanation of the functionality of the tool and the tests performed")
 
 ##Youtube short overview of the tests and how to use the tool (11m55s)
-[![Youtube link](https://img.youtube.com/vi/M82eT1qxJZQ&/0.jpg)](https://www.youtube.com/watch?v=M82eT1qxJZQ& "Short overview of the tests and how to use the tool")
+[![Youtube link](https://img.youtube.com/vi/M82eT1qxJZQ/0.jpg)](https://www.youtube.com/watch?v=M82eT1qxJZQ "Short overview of the tests and how to use the tool")
