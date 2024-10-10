@@ -205,7 +205,7 @@ def check_and_update_columns(model, pc_columns):
     
     num_ifc_emb_columns_no_match = len(ifc_emb_columns_no_match)
     if num_ifc_emb_columns_no_match > 0:
-        print(f'There are {num_ifc_emb_columns_no_match} IFC columns embedded in walls that couldn not be checked against point cloud data.')
+        print(f'There are {num_ifc_emb_columns_no_match} IFC columns embedded in walls that could not be checked against point cloud data.')
     
     num_pc_columns_remaining = len(remaining_pc_columns) # point cloud columns that are not close to a wall, or at least not matched to ifc columns embedded in walls
     num_ifc_columns_not_close = len(ifc_columns_not_close_to_walls)
